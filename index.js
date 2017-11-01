@@ -1,5 +1,12 @@
 'use strict';
 
+/**
+* Copyright (c) 2017 Copyright tj All Rights Reserved.
+* Author: lipengxiang
+* Date: 
+* Desc: 对koa-sessio进行扩展, 暴露出sid.
+*/
+
 const debug = require('debug')('koa-session');
 const ContextSession = require('./lib/context');
 const util = require('./lib/util');
@@ -9,6 +16,8 @@ const is = require('is-type-of');
 
 const CONTEXT_SESSION = Symbol('context#contextSession');
 const _CONTEXT_SESSION = Symbol('context#_contextSession');
+
+const sid_ctx_key = '__sid';
 
 /**
  * Initialize session middleware with `opts`:
@@ -24,7 +33,9 @@ const _CONTEXT_SESSION = Symbol('context#_contextSession');
 module.exports = function(opts, app) {
   // session(app[, opts])
   if (opts && typeof opts.use === 'function') {
-    [ app, opts ] = [ opts, app ];
+    const tmp = app;
+    app = opts;
+    opts = tmp;
   }
   // app required
   if (!app || typeof app.use !== 'function') {
@@ -114,8 +125,12 @@ function extendContext(context, opts) {
   Object.defineProperties(context, {
     [CONTEXT_SESSION]: {
       get() {
-        if (this[_CONTEXT_SESSION]) return this[_CONTEXT_SESSION];
+        if (this[_CONTEXT_SESSION]) {
+          this[sid_ctx_key] = this[_CONTEXT_SESSION].externalKey;
+          return this[_CONTEXT_SESSION];
+        }
         this[_CONTEXT_SESSION] = new ContextSession(this, opts);
+        this[sid_ctx_key] = this[_CONTEXT_SESSION].externalKey;
         return this[_CONTEXT_SESSION];
       },
     },
