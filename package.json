@@ -2,7 +2,7 @@
   "name": "koa-session-ex",
   "description": "Koa cookie session middleware with external store support",
   "repository": "koajs/session",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "keywords": [
     "koa",
     "middleware",
@@ -11,7 +11,8 @@
   ],
   "files": [
     "index.js",
-    "lib"
+    "lib",
+    "types"
   ],
   "devDependencies": {
     "eslint": "3",
@@ -38,5 +39,6 @@
     "test-cov": "NODE_ENV=test node ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --require should test/*.test.js",
     "test-travis": "npm run lint && NODE_ENV=test node ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha --report lcovonly -- --require should test/*.test.js",
     "lint": "eslint lib test index.js"
-  }
+  },
+  "types": "./types/index.d.ts"
 }
